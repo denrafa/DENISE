@@ -3,18 +3,6 @@ import time
 from typing import Tuple, Dict, List
 import sqlite3
 
-def open_db(filename:str)->Tuple[sqlite3.Connection, sqlite3.Cursor]:
-    db_connection = sqlite3.connect(filename)#connect to existing DB or create new one
-    cursor = db_connection.cursor()#get ready to read/write data
-    return db_connection, cursor
-def close_db(connection:sqlite3.Connection):
-    connection.commit()#make sure any changes get saved
-    connection.close()
-
-
-
-
-
 
 def create_table():
      dbconnection =sqlite3.connect('database.db')
@@ -31,6 +19,12 @@ def create_table():
                          how_to_apply text,
                          company_logo real
                          );''')
+        
+        def insert_db(cursor:sqlite3.Cursor, dbconnection=None):
+            sql = '''INSERT INTO jobs(id,type,create_at,company_url,location,title,description,how_t-_apply,company_logo)
+                     VALUES (123, Bachelor,12.5, www.jobsgithub.com,New York,github jobs,python,online,CPA)'''
+            cursor.execute(sql,(id,type,'create_at','company_url','location','title','description','how_to_apply','company_logo'))
+        
      dbconnection.commit()
      dbconnection.close()
 
@@ -58,15 +52,22 @@ def save_data(data, filename='data.txt'):
         for item in data:
             print(item, file=file)
 
-
-def save_to_db(data):
+def save_to_db(data, cursor=None):
     """:keyword data is a list of dictionaries. Each dictionary is a JSON object with a bit of jobs data"""
-    pass
 
+    cursor.execute("SELECT *FROM data")
+    data =cursor.sfetchall()
+    print (data)
+
+    for item in data:
+        print(data)
 
 def main():
     data = get_github_jobs_data()
     save_data(data)
+    
+    
+print("connection established")
 
 
 if __name__ == '__main__':
